@@ -1,0 +1,31 @@
+document.getElementById("calculateBtn").addEventListener("click", function () {
+  const loanAmount = parseFloat(document.getElementById("loanAmount").value);
+  const loanTenure = parseInt(document.getElementById("loanTenure").value);
+  const processingFeesPercent = parseFloat(document.getElementById("processingFees").value);
+  const gstPercent = 18;
+  const interestRate = 36;
+
+  if (isNaN(loanAmount) || isNaN(loanTenure) || isNaN(processingFeesPercent)) {
+    alert("Please enter valid numbers");
+    return;
+  }
+
+  const processingFeesAmount = (processingFeesPercent / 100) * loanAmount;
+  const gstAmount = (gstPercent / 100) * processingFeesAmount;
+  const disbursalAmount = loanAmount - processingFeesAmount - gstAmount;
+
+  const weeklyInterestRate = interestRate / 52 / 100;
+  const weeklyEWI = (loanAmount * weeklyInterestRate) / (1 - Math.pow(1 + weeklyInterestRate, -loanTenure)) + (7 * loanAmount * interestRate) / 365 / loanTenure;
+
+  const totalRepayableAmount = weeklyEWI * loanTenure;
+  const totalCharges = processingFeesAmount + gstAmount;
+  const totalAmountWithCharges = totalRepayableAmount + totalCharges;
+
+  document.getElementById("disbursalAmount").textContent = disbursalAmount.toFixed(2);
+  document.getElementById("processingFeesAmount").textContent = processingFeesAmount.toFixed(2);
+  document.getElementById("gstAmount").textContent = gstAmount.toFixed(2);
+  document.getElementById("weeklyEWI").textContent = weeklyEWI.toFixed(2);
+  document.getElementById("totalRepayableAmount").textContent = totalRepayableAmount.toFixed(2);
+  document.getElementById("totalCharges").textContent = totalCharges.toFixed(2);
+  document.getElementById("totalAmountWithCharges").textContent = totalAmountWithCharges.toFixed(2);
+});
